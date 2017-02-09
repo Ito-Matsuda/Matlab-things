@@ -50,36 +50,6 @@ sizeOfA = size(A);
 else % The determinant is zero
     disp('Matrix is Singular, no Bspace');
 end
-
-% Begin finding null space, useful link
-% Look at http://www.math.odu.edu/~bogacki/cgi-bin/lat.cgi?c=null
-% My way of finding a basis of the null space of the matrix is based off
-% patterns found in the link above
-% Checked with example solution given 
-
-% Step 1) Reduce matrix A to RREF
-% Step 2) The zero rows will have a solution of just 1
-% Step 3) Non-zero rows will have a solution of the negative of the 
-%         Negative value in the last column
-Nspace = zeros(sizeOfA(1),1); % Instantiate the vector to be used later
-zeroCounter = 0;
-Arref = rref(A);
-for whatRow = 1:sizeOfA(1) % Iterate through rows
-    for whatColumn = 1:sizeOfA(2)
-        if (Arref(whatRow,whatColumn) == 0)
-           zeroCounter = zeroCounter + 1;
-        end 
-    end
-    % Finish iterating through columns
-    % If the number of columns = number of zeros, then you know that the
-    % value at that row must be a '1' or anything else for that matter
-    if (zeroCounter == sizeOfA(2))
-        Nspace(whatRow) = 1;
-        zeroCounter = 0;
-    elseif (zeroCounter < sizeOfA(2)) % There was a one 
-        Nspace(whatRow) = (-1) * Arref(whatRow,whatColumn);
-        zeroCounter = 0;
-    end
-end 
+Nspace = null(A,'r');
 disp('Nspace is');
 disp(Nspace);

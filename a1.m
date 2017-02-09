@@ -48,7 +48,48 @@ while (finished == 0) % ie) while false
 end
 disp('Bspace is')
 disp(Bspace)
-Nspace = [1];
+% Begin finding null space, useful link
+% http://math.stackexchange.com/questions/598508/basis-of-a-null-space-of-a-matrix
+% When finding the Null Space, ALWAYS reduce to Reduced Row Echelon Form (RREF). From There, it is just 
+% finding the solution to Ax = 0. where x and zero are vectors.
+
+% Or use this link http://math.stackexchange.com/questions/88301/finding-the-basis-of-a-null-space
+% Augment A with zero vector then reduce to RREF
+zeroVector = zeros(sizeOfA(1),1); % Make the zero vector using the height of 'A'
+augmentZero = [A,zeroVector];
+rrefAugZero = rref(augmentZero);
+
+
+% If you use the following code (or re-use the above one) you get Null
+% Space of zero
+Nspace = zeros(totalSize(1),1); %make a vector to match the height of A
+Nspace(totalSize(1)) = rrefAugZero(totalSize(1),totalSize(2));
+finished = false;
+currentRow = (totalSize(1)-1); % Height of matrix go "up" matrix one row
+total = 0;
+while (finished == 0) % ie) while false
+    % Must now go through the current row (not including the augmented b 
+    % up until the pivot (1) and add em up  
+    whichColumn = (sizeOfA(2)); % Width of matrix
+    rowFinished = false;
+    while (rowFinished == 0)
+        if (whichColumn == currentRow) % You hit the pivot
+            break;
+        else
+            total = total + (Nspace(whichColumn)*(A(currentRow,whichColumn)));
+            whichColumn = whichColumn-1; % Move a column space to the left
+        end
+        total = 0; % Reset the total
+    end % End going through the row
+    Nspace(currentRow) = (rrefAugZero(currentRow,totalSize(2)) - total);
+    if (currentRow == 1) % We are at the top so cant go up further
+        finished = true;
+    else
+        currentRow = currentRow - 1;
+    end
+end
+disp('Nspace is');
+disp(Nspace);
 % % Void function that just affects answer
 % function recurse(height,width,matrix,resultVector)
 % % Answer the "bottommost" one

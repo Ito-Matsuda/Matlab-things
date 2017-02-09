@@ -58,57 +58,42 @@ disp(Bspace)
 zeroVector = zeros(sizeOfA(1),1); % Make the zero vector using the height of 'A'
 augmentZero = [A,zeroVector];
 rrefAugZero = rref(augmentZero);
+Nspace = zeros(sizeOfA(1),1); % Instantiate the thing to be used later
+
+% Another way of doing this is to just take the rref of A, look for leading
+% entries, any zero rows it doesnt matter what you put there (so say 1)
+% for the ones that are have a one as the leading co -eff, take the
+% negative of the other value (likely in the very last column)
+% Look at http://www.math.odu.edu/~bogacki/cgi-bin/lat.cgi?c=null
+disp('Nspace is');
+disp(Nspace);
 
 
 % If you use the following code (or re-use the above one) you get Null
 % Space of zero
-Nspace = zeros(totalSize(1),1); %make a vector to match the height of A
-Nspace(totalSize(1)) = rrefAugZero(totalSize(1),totalSize(2));
-finished = false;
-currentRow = (totalSize(1)-1); % Height of matrix go "up" matrix one row
-total = 0;
-while (finished == 0) % ie) while false
-    % Must now go through the current row (not including the augmented b 
-    % up until the pivot (1) and add em up  
-    whichColumn = (sizeOfA(2)); % Width of matrix
-    rowFinished = false;
-    while (rowFinished == 0)
-        if (whichColumn == currentRow) % You hit the pivot
-            break;
-        else
-            total = total + (Nspace(whichColumn)*(A(currentRow,whichColumn)));
-            whichColumn = whichColumn-1; % Move a column space to the left
-        end
-        total = 0; % Reset the total
-    end % End going through the row
-    Nspace(currentRow) = (rrefAugZero(currentRow,totalSize(2)) - total);
-    if (currentRow == 1) % We are at the top so cant go up further
-        finished = true;
-    else
-        currentRow = currentRow - 1;
-    end
-end
-disp('Nspace is');
-disp(Nspace);
-% % Void function that just affects answer
-% function recurse(height,width,matrix,resultVector)
-% % Answer the "bottommost" one
-% % Go in a loop to go through the row --> work from right to left
-% % Right to left because the leftmost values would be zero (rref)
-% n = width - 1; % This is correct
-% total = 0
-% while n > height
-%     % Just height because we are looking at square matrices and the values
-%     % affected by back substitution are only up to the pivots take for
-%     % example in a 4x4 for val (2,2) -which is y- you need to look at (2,3)
-%     % and (2,4) and use their values to get your "y"
-%     total = total + resultVector(n)*matrix(height,n) % Stay at the current
-%     % row, just go down to the left
-%     n = n-1 % Increment
+% Nspace = zeros(totalSize(1),1); %make a vector to match the height of A
+% Nspace(totalSize(1)) = rrefAugZero(totalSize(1),totalSize(2));
+% finished = false;
+% currentRow = (totalSize(1)-1); % Height of matrix go "up" matrix one row
+% total = 0;
+% while (finished == 0) % ie) while false
+%     % Must now go through the current row (not including the augmented b 
+%     % up until the pivot (1) and add em up  
+%     whichColumn = (sizeOfA(2)); % Width of matrix
+%     rowFinished = false;
+%     while (rowFinished == 0)
+%         if (whichColumn == currentRow) % You hit the pivot
+%             break;
+%         else
+%             total = total + (Nspace(whichColumn)*(A(currentRow,whichColumn)));
+%             whichColumn = whichColumn-1; % Move a column space to the left
+%         end
+%         total = 0; % Reset the total
+%     end % End going through the row
+%     Nspace(currentRow) = (rrefAugZero(currentRow,totalSize(2)) - total);
+%     if (currentRow == 1) % We are at the top so cant go up further
+%         finished = true;
+%     else
+%         currentRow = currentRow - 1;
+%     end
 % end
-% % Take the right most and bottom most (that is the "b") and subtract
-% % whatever you got as the total and set that to that part in the "x" vector
-% % Like before, leading co-efficient is one so you can just set it
-% answer(height) = (matrix(height,width) - total)
-% %Recurse with one row taken from the bottom (so from 3 to 2)
-% recurse((height-1), width,matrix,answer)
